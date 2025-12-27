@@ -1,0 +1,28 @@
+# --- Python & Cache ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.ipynb_checkpoints/
+
+# --- Environment & Credentials ---
+.env
+.venv/
+env/
+venv/
+ENV/
+
+# --- OS Generated Files ---
+.DS_Store
+Thumbs.db
+
+# --- Large/Redundant Local Scripts ---
+# Only include these if you don't want your training scripts on GitHub
+# train_bert.py
+# train_bilstm.py
+# download_missing_bilstm_model_files.py
+
+# --- Data ---
+# Exclude the raw data folder if it contains large CSV files
+data/
