@@ -1,30 +1,26 @@
-# 1. Use an official lightweight Python image
+# Use a slim Python image to save space
 FROM python:3.10-slim
 
-# 2. Set environment variables to ensure clean output
+# Prevent Python from writing .pyc files and enable unbuffered logging
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
-ENV TF_CPP_MIN_LOG_LEVEL=3
 
-# 3. Set the working directory inside the container
 WORKDIR /app
 
-# 4. Install system dependencies for torch and building tools
+# Install system dependencies needed for some Python packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# 5. Copy and install Python requirements
-# We use the CPU-only version of torch to keep the image size small
+# Copy requirements first to leverage Docker cache
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 6. Copy all project files into the container
+# Copy the rest of the app (including bert.pt and bilstm folders)
 COPY . .
 
-# 7. Expose the port FastAPI runs on
+# Expose the port FastAPI will run on
 EXPOSE 8000
 
-# 8. Command to run the application
-# We use 0.0.0.0 so the container is accessible from outside
+# Run the app using uvicorn
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
